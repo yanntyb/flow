@@ -14,7 +14,7 @@ class FileController extends Controller
         $path = $request->file('file')?->store('test');
         $file = File::query()->create([
             'path' => $path,
-            'slug'=> 'test',
+            'slug'=> uniqid('file-',true),
         ]);
         return response()->json([
             'slug' => $file->slug,
