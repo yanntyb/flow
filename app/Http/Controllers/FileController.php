@@ -33,7 +33,7 @@ class FileController extends Controller
         $file = File::query()->firstWhere('slug', $slug);
         if(!$file) return '';
         return response()->json([
-            'path' => public_path($file->path),
+            'path' => './' . $file->path,
         ]);
     }
 }
