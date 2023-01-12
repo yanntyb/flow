@@ -29,9 +29,9 @@ class FromUploadUrl extends AbstractFileConnector
 
     /**
      * Url set is incoming request client url
-     * @return string
+     * @return string|null
      */
-    public function getClientUrl(): string
+    public function getClientUrl(): ?string
     {
         return request()->header('referer');
     }
