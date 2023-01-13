@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('slug');
             $table->string('path');
             $table->boolean('need_connector')->default(false);
-            $table->string('connected_with')->nullable();
+            $table->json('connected_with')->nullable();
             $table->json('connected_data')->nullable();
             $table->timestamps();
         });

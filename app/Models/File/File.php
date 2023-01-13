@@ -4,17 +4,19 @@ namespace App\Models\File;
 
 use App\Models\File\Connector\AbstractFileConnector;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
  * @property int $id
  * @property string $slug
  * @property string $path
- * @property string $connected_with
+ * @property Collection $connected_with
  * @property boolean $need_connector
- * @property Collection $connected_data
- * @property AbstractFileConnector $connector
+ * @property Collection|null $connected_data
+ * @property Collection<AbstractFileConnector>|null $connectors
  */
 class File extends Model
 {
@@ -22,6 +24,7 @@ class File extends Model
     protected $guarded = [];
     protected $casts = [
         'connected_data' => AsCollection::class,
+        'connected_with' => AsCollection::class,
         'need_connector' => 'bool',
     ];
 
@@ -30,8 +33,28 @@ class File extends Model
         return $this->path;
     }
 
-    public function getConnectorAttribute(): AbstractFileConnector
+    /**
+     * @return Collection<AbstractFileConnector>
+     */
+    public function getConnectorsAttribute(): Collection
     {
-        return new $this->connected_with($this);
+        return $this->connected_with->map(fn(string $class) => new $class($this));
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function connectedWith(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string|array|null $classes) =>  Collection::wrap($classes),
+        );
+    }
+
+    public function connectedData(): Attribute
+    {
+        return Attribute::make(
+            set: fn(array|null $datas) => collect($datas)->mapWithKeys(fn($data) => $data),
+        );
     }
 }

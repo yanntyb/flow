@@ -20,9 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('/file')->group(function(){
-    Route::post('/upload', [FileController::class, 'upload'])->name('file.upload');
+    Route::match(['get','post'],'/upload', [FileController::class, 'upload'])->name('file.upload');
     Route::get('/show/{slug?}', [FileController::class, 'show'])->name('file.show');
 
-    Route::get('/link/{slug?}', [FileController::class, 'getFile'])->name('file.get');
+    Route::match(['get','post'],'/link/{slug?}', [FileController::class, 'getFile'])->name('file.get');
 });
 

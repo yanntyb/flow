@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\File\Connector\FromUploadUrl;
+use App\Models\File\Connector\WithToken;
 use App\Models\File\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -17,10 +18,13 @@ class FileController extends Controller
         $file = File::query()->create([
             'path' => 'storage/' . $path,
             'slug'=> uniqid('file-',true),
-            'connected_with' => FromUploadUrl::class,
-            'connected_data' => FromUploadUrl::getConnectedData(),
+//            'connected_with' => [FromUploadUrl::class,WithToken::class],
+//            'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
+            'connected_with' => [WithToken::class],
+            'connected_data' => [WithToken::getConnectedData(post: true)],
             'need_connector' => true,
         ]);
+        ds($file)->die();
         return response()->json([
             'slug' => $file->slug,
         ]);
@@ -32,9 +36,6 @@ class FileController extends Controller
          * @var File $file
          */
         $file = File::query()->where('slug',$slug)->firstOrFail();
-        if(!$file?->connector->canBeAccessed()){
-            abort(403);
-        }
         return Storage::url($file->path);
     }
 

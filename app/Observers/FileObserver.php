@@ -2,13 +2,18 @@
 
 namespace App\Observers;
 
+use App\Models\File\Connector\AbstractFileConnector;
 use App\Models\File\File;
 
 class FileObserver
 {
    public function retrieved(File $file)
    {
-       if($file->need_connector && !$file?->connector->canBeAccessed()){
+       if(
+           $file->need_connector
+           &&
+           !$file->connectors?->filter(fn(AbstractFileConnector $connector) => $connector->canBeAccessed())->count()
+       ) {
            abort(403);
        }
    }

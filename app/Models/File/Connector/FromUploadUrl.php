@@ -9,13 +9,16 @@ class FromUploadUrl extends AbstractFileConnector
 {
 
     /**
+     * $url to set a different url than the upload one
+     * @param string|null $url
      * @return array
      */
     #[ArrayShape(['url' => "string"])]
-    public static function getConnectedData(): array
+    public static function getConnectedData(string $url = null): array
     {
+        App::make(FromUploadUrl::class)->getClientUrl();
         return [
-            'url' => App::make(FromUploadUrl::class)->getClientUrl(),
+            'url' => $url ?: App::make(FromUploadUrl::class)->getClientUrl(),
         ];
     }
 
@@ -24,7 +27,7 @@ class FromUploadUrl extends AbstractFileConnector
      */
     public function canBeAccessed(): bool
     {
-        return $this->getFileInstance()->connected_data->first('url') === $this->getClientUrl();
+        return $this->getFileInstance()->connected_data['url'] === $this->getClientUrl();
     }
 
     /**
@@ -34,5 +37,10 @@ class FromUploadUrl extends AbstractFileConnector
     public function getClientUrl(): ?string
     {
         return request()->header('referer');
+    }
+
+    public function fromPostData(): bool
+    {
+        return false;
     }
 }

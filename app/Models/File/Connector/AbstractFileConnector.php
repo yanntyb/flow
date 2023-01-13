@@ -4,6 +4,7 @@ namespace App\Models\File\Connector;
 
 use App\Models\File\Connector\Access\AccessFromInterface;
 use App\Models\File\File;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Gate;
 
 abstract class AbstractFileConnector implements FileConnectorInterface, AccessFromInterface
@@ -30,6 +31,19 @@ abstract class AbstractFileConnector implements FileConnectorInterface, AccessFr
     public function canAccess(): bool
     {
         return Gate::allows('access-file',$this->getFileInstance());
+    }
+
+    abstract public function fromPostData(): bool;
+
+    public function getRequestValue(mixed $key,bool $post = null): mixed
+    {
+        if(!is_null($post)){
+            $methode = $post ? 'post': 'get';
+        }
+        else{
+            $methode = $this->fromPostData() ? 'post' : 'get';
+        }
+        return request()->{$methode}($key);
     }
 
 }
