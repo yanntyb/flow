@@ -24,7 +24,6 @@ class FileController extends Controller
             'connected_data' => [WithToken::getConnectedData(post: true)],
             'need_connector' => true,
         ]);
-        ds($file)->die();
         return response()->json([
             'slug' => $file->slug,
         ]);
