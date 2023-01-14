@@ -18,10 +18,8 @@ class FileController extends Controller
         $file = File::query()->create([
             'path' => 'storage/' . $path,
             'slug'=> uniqid('file-',true),
-//            'connected_with' => [FromUploadUrl::class,WithToken::class],
-//            'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
-            'connected_with' => [WithToken::class],
-            'connected_data' => [WithToken::getConnectedData(post: true)],
+            'connected_with' => [FromUploadUrl::class,WithToken::class],
+            'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
             'need_connector' => true,
         ]);
         return response()->json([
