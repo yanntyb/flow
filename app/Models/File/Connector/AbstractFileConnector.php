@@ -12,12 +12,12 @@ abstract class AbstractFileConnector implements FileConnectorInterface, AccessFr
     private File $file;
 
 
-    public function __construct(File &$file)
+    public function __construct(File $file)
     {
         $this->setFileInstance($file);
     }
 
-    public function setFileInstance(File &$file): static
+    public function setFileInstance(File $file): static
     {
         $this->file = $file;
         return $this;
