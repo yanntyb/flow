@@ -28,7 +28,7 @@ class WithToken extends AbstractFileConnector
      */
     public function canBeAccessed(): bool
     {
-        return$this->getFileInstance()->connected_data['token']['value'] ===  $this->getRequestValue('token') ?? false;
+        return $this->getFileInstance()->connected_data['token']['value'] ===  ($this->getRequestValue('token') ?? null);
     }
 
     /**

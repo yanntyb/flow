@@ -9,11 +9,8 @@ class FileObserver
 {
    public function retrieved(File $file)
    {
-       if(
-           $file->need_connector
-           &&
-           !$file->connectors?->filter(fn(AbstractFileConnector $connector) => $connector->canBeAccessed())->count()
-       ) {
+       $connectorAuthorized = $file->connectors?->filter(fn(AbstractFileConnector $connector) => !$connector->canBeAccessed());
+       if($file->need_connector && !$connectorAuthorized->count()) {
            abort(403);
        }
    }
