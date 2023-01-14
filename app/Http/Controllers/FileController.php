@@ -18,7 +18,7 @@ class FileController extends Controller
         $path = $request->file('file')?->storePublicly('file','public');
         $file = File::query()->create([
             'path' => $path,
-            'slug'=> uniqid('file-',true),
+            'slug' => $request->get('slug',uniqid('file-',true)),
             'connected_with' => [FromUploadUrl::class,WithToken::class],
             'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
         ]);
