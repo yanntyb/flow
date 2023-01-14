@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\File\Connector\FromUploadUrl;
 use App\Models\File\Connector\WithToken;
 use App\Models\File\File;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +27,7 @@ class FileController extends Controller
         ]);
     }
 
-    public function getFile(string $slug): string
+    public function getFile(string $slug): JsonResponse
     {
         /**
          * @var File $file
