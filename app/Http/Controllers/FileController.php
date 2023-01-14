@@ -16,11 +16,11 @@ class FileController extends Controller
     {
         $path = $request->file('file')?->storePublicly('file','public');
         $file = File::query()->create([
-            'path' => 'storage/' . $path,
+            'path' => $path,
             'slug'=> uniqid('file-',true),
             'connected_with' => [FromUploadUrl::class,WithToken::class],
             'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
-            'need_connector' => true,
+//            'need_connector' => true,
         ]);
         return response()->json([
             'slug' => $file->slug,
@@ -33,7 +33,7 @@ class FileController extends Controller
          * @var File $file
          */
         $file = File::query()->where('slug',$slug)->firstOrFail();
-        return Storage::url($file->path);
+        return $file->path;
     }
 
     public function show(string $slug)

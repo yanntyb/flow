@@ -17,4 +17,9 @@ class FileObserver
            abort(403);
        }
    }
+
+    public function creating(File $file)
+    {
+        $file->need_connector = (bool)$file->connected_data;
+   }
 }

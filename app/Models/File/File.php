@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -16,7 +17,7 @@ use Illuminate\Support\Collection;
  * @property Collection $connected_with
  * @property boolean $need_connector
  * @property Collection|null $connected_data
- * @property Collection<AbstractFileConnector>|null $connectors
+ * @property ?Collection<AbstractFileConnector>|null $connectors
  */
 class File extends Model
 {
@@ -33,11 +34,19 @@ class File extends Model
         return $this->path;
     }
 
-    /**
-     * @return Collection<AbstractFileConnector>
-     */
-    public function getConnectorsAttribute(): Collection
+    public function path(): Attribute
     {
+        return Attribute::make(
+           get: fn($path) => url(Storage::url($path)),
+        );
+    }
+
+    /**
+     * @return ?Collection<AbstractFileConnector>
+     */
+    public function getConnectorsAttribute(): ?Collection
+    {
+        if(!$this->connected_with?->count()) return null;
         return $this->connected_with->map(fn(string $class) => new $class($this));
     }
 
