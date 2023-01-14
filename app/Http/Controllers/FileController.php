@@ -17,8 +17,7 @@ class FileController extends Controller
     {
         $path = $request->file('file')?->storePublicly('file','public');
         $slug = $request->get('slug',uniqid('file-',true));
-        File::query()->where('slug',$slug)->delete();
-        $file = File::query()->create([
+        $file = File::query()->updateOrCreate([
             'path' => $path,
             'slug' => $request->get('slug',uniqid('file-',true)),
             'connected_with' => [FromUploadUrl::class,WithToken::class],
