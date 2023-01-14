@@ -16,6 +16,8 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $path = $request->file('file')?->storePublicly('file','public');
+        $slug = $request->get('slug',uniqid('file-',true));
+        File::query()->where('slug',$slug)->delete();
         $file = File::query()->create([
             'path' => $path,
             'slug' => $request->get('slug',uniqid('file-',true)),
