@@ -32,7 +32,9 @@ class FileController extends Controller
          * @var File $file
          */
         $file = File::query()->where('slug',$slug)->firstOrFail();
-        return $file->path;
+        return response()->json([
+            'path' => $file->path,
+        ]);
     }
 
     public function show(string $slug)
