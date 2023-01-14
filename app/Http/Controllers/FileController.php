@@ -19,7 +19,7 @@ class FileController extends Controller
             'path' => 'storage/' . $path,
             'slug'=> uniqid('file-',true),
             'connected_with' => [FromUploadUrl::class,WithToken::class],
-            'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData(false)],
+            'connected_data' => [FromUploadUrl::getConnectedData(),WithToken::getConnectedData()],
             'need_connector' => true,
         ]);
         return response()->json([
